@@ -1,12 +1,15 @@
-const e = React.createElement;
-
 
 const { useState, useEffect } = React;
-localStorage.setItem('cart', JSON.stringify([]));
-localStorage.setItem('cartItem', JSON.stringify([]));
-const cart = JSON.parse(localStorage.getItem('cart'));
+
+if(localStorage.getItem('cart') == null ) {
+    localStorage.setItem('cart', JSON.stringify([]))
+}
+if(localStorage.getItem('cartItem') == null ) {
+    localStorage.setItem('cartItem', JSON.stringify([]))
+}
 
 const AddToCard = (item) => {
+    const cart = JSON.parse(localStorage.getItem('cart'));
     if(cart.find(el => el === item.id)) {
         console.log('уже есть в корзине')
     } else {
@@ -20,6 +23,7 @@ const AddToCard = (item) => {
 }
 
 const RemoveFromCard = (id) => {
+    const cart = JSON.parse(localStorage.getItem('cart'));
     if(cart.find(el => el === id)) {
         const item = cart.findIndex(el => el === id);
         cart.splice(item, 1)
@@ -42,36 +46,47 @@ const SendRequest = () => {
     localStorage.setItem('cart', JSON.stringify([]))
     localStorage.setItem('cartItem', JSON.stringify([]))
 }
+const GetPizza = async (type) => {
+    const result = await fetch(`https://react-p-7469d-default-rtdb.firebaseio.com/Pizza${typeof type !== 'undefined' ? type : ''}.json`);
+
+    const pizza = await result.json();
+
+    console.log(pizza)
+    return {
+        result,
+        pizza,
+    }
+}
 
 
-const MyComponent = () => {
+const Shop = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
+  const [filtered, setFiltered] = useState([]);
 
   // База куда нужно записывать даные карточки "https://react-p-7469d-default-rtdb.firebaseio.com/sample.json";
 
   useEffect(() => {
-      const GetPizza = async () => {
-          const result = await fetch('https://react-p-7469d-default-rtdb.firebaseio.com/Pizza.json');
-          const pizza = await result.json();
-          return {
-              result,
-              pizza
-          }
-      }
-      GetPizza().then(res => {
+      GetPizza().catch(err => {
+          console.error(err);
+          setError(err)
+      }).then(res => {
           if(res.result.status === 200) {
               // console.log(res)
               // console.log(res.result.headers.get('Content-Type'))
               // console.log(res.pizza)
               // console.log('о да мы получили пиццу');
-              setItems(res.pizza);
-              setIsLoaded(true);
+              if(res.pizza === null) {
+                  setError({message: 'кончилась пицца'})
+              } else if(res.pizza.length > 0) {
+                  setItems(res.pizza);
+                  setIsLoaded(true);
+              }
           } else if (res.result.status === 403) {
               window.location.href = '/login'
-          }  else {
-
+          } else if (res.result.status === 404) {
+              setError({message: 'нет такой пиццы'})
           }
       })
 
@@ -91,6 +106,11 @@ const MyComponent = () => {
   }, []);
 
 
+const Filter = (price) => {
+    setFiltered(items.filter(el => el.price === price));
+}
+
+const categoryItems = filtered.length > 0 ? filtered : items;
 
   if (error) {
     return <div>Ошибка: {error.message}</div>;
@@ -99,7 +119,7 @@ const MyComponent = () => {
   } else {
     return(
       <div className="card_wrap">
-        {items.map(item => (
+        { categoryItems.map(item => (
             <div key={item.id} className="card">
                 <img src={item.image} alt="image" className="card__image" />
                 <h3 className="card__title">{item.name}</h3>
@@ -110,6 +130,12 @@ const MyComponent = () => {
             </div>
         ))}
           <button type="button" onClick={() => SendRequest()}>Отправить </button>
+
+          <ul>
+              <li><button onClick={() => Filter(705)} >705</button></li>
+              <li><button onClick={() => Filter(759)} >759</button></li>
+              <li><button onClick={() => Filter()} >3</button></li>
+           </ul>
       </div>
     )
   }
@@ -117,4 +143,4 @@ const MyComponent = () => {
 
 
 const domContainer = document.querySelector('#card_container');
-ReactDOM.render(e(MyComponent), domContainer);
+ReactDOM.render(React.createElement(Shop), domContainer);
