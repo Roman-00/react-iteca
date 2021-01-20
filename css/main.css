@@ -99,3 +99,22 @@ h1,h2,h3,h4,h5,h6,p {
 
     border: 1px solid grey;
 }
+
+.card__item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.count__wrap {
+  display: flex;
+  align-items: center;
+}
+
+.count__number {
+  max-width: 30px;
+  margin: 0px 10px;
+
+  text-align: center;
+}

@@ -64,6 +64,7 @@ const Shop = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
   const [filtered, setFiltered] = useState([]);
+  const [count, setCount] = useState(0);
 
   // База куда нужно записывать даные карточки "https://react-p-7469d-default-rtdb.firebaseio.com/sample.json";
 
@@ -124,7 +125,14 @@ const categoryItems = filtered.length > 0 ? filtered : items;
                 <img src={item.image} alt="image" className="card__image" />
                 <h3 className="card__title">{item.name}</h3>
                 <p className="card__text">{item.description}</p>
-                <small className="card__price">Цена: {item.price}</small>
+                <div className="card__item">
+                    <small className="card__price">Цена: {item.price}</small>
+                    <div className="count__wrap">
+                        <button className="count__plus" onClick={() => setCount(count + 1)}>+</button>
+                        <input type="number" value={count} className="count__number" onChange={(e)=> {setCount((e.target.value))}}/>
+                        <button className="count__minus" onClick={() => setCount(count - 1)}>-</button>
+                    </div>
+                </div>
                 <button type="button" onClick={() => AddToCard(item)}>Купить</button>
                 <button type="button" onClick={() => RemoveFromCard(item.id)}>х</button>
             </div>

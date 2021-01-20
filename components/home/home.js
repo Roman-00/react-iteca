@@ -59,7 +59,7 @@ const Home = () => {
                                 </ul>
                         </span>
                         <span className="home__left--block">
-                                <a href={item.pdf} target="_blank" className="pdf__wrap">
+                                <a href={item.pdf ? item.pdf : '/'} target="_blank" className="pdf__wrap">
                                 Ваш Pdf файл: <img src="img/icon/pdf.svg" alt="image" width="35px" height="35px" />
                                 </a>
                                 <div className="left__block-img">
