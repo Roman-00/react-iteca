@@ -1,4 +1,3 @@
-
 const { useState, useEffect } = React;
 
 if(localStorage.getItem('cart') == null ) {
@@ -119,6 +118,18 @@ const categoryItems = filtered.length > 0 ? filtered : items;
       return <div>Загрузка...</div>;
   } else {
     return(
+    <>
+        <aside>
+            <div className="title__cart">
+                <span>Ваш заказ:</span>
+            </div>
+
+            <div className="block__cart">
+                Отображения заказов:
+            </div>
+
+            <button type="button" onClick={() => SendRequest()}>Отправить </button>
+        </aside>
       <div className="card_wrap">
         { categoryItems.map(item => (
             <div key={item.id} className="card">
@@ -137,7 +148,6 @@ const categoryItems = filtered.length > 0 ? filtered : items;
                 <button type="button" onClick={() => RemoveFromCard(item.id)}>х</button>
             </div>
         ))}
-          <button type="button" onClick={() => SendRequest()}>Отправить </button>
 
           <ul>
               <li><button onClick={() => Filter(705)} >705</button></li>
@@ -145,6 +155,7 @@ const categoryItems = filtered.length > 0 ? filtered : items;
               <li><button onClick={() => Filter()} >3</button></li>
            </ul>
       </div>
+    </>
     )
   }
 };

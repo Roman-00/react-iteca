@@ -118,3 +118,24 @@ h1,h2,h3,h4,h5,h6,p {
 
   text-align: center;
 }
+
+aside {
+  position: absolute;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  height: 80vh;
+  width: 300px;
+}
+
+.title__cart {
+  margin: 10px 0;
+  text-align: center;
+}
+
+.block__cart {
+  margin-top: 20px;
+  margin-bottom: auto;
+}
