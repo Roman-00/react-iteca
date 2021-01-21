@@ -115,7 +115,7 @@ const categoryItems = filtered.length > 0 ? filtered : items;
   if (error) {
     return <div>Ошибка: {error.message}</div>;
   } else if (!isLoaded) {
-      return <div>Загрузка...</div>;
+      return <div class="loader"></div>;
   } else {
     return(
     <>
