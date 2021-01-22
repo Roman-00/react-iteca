@@ -60,10 +60,10 @@ const Home = () => {
                         </span>
                         <span className="home__left--block">
                                 <a href={item.pdf ? item.pdf : '/'} target="_blank" className="pdf__wrap">
-                                Ваш Pdf файл: <img src="img/icon/pdf.svg" alt="image" width="35px" height="35px" />
+                                    {item.pdf ? <span>Ваш Pdf <img src={'../../img/icon/pdf.svg'} width="35px" height="35px"/></span> : <div> Данных нет </div>}
                                 </a>
                                 <div className="left__block-img">
-                                    <img src={item.image} alt="image"/>
+                                    {item.image ? <img src={item.image} /> : <button>Зпросить Pdf</button>}
                                 </div>
                         </span>
                        </div>
