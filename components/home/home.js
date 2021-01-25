@@ -1,4 +1,4 @@
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
 
 const GetDataPage = async () => {
     const result = await fetch('https://react-p-7469d-default-rtdb.firebaseio.com/home.json');
@@ -13,10 +13,27 @@ const GetDataPage = async () => {
     }
 }
 
+const SendQuestion = (e) => {
+    // const result = await fetch('https://react-p-7469d-default-rtdb.firebaseio.com/TARGET_URL', {method: 'post', body: e});
+    //
+    // const home = await result.json();
+    //
+    // console.log(home);
+    let result = {
+        status: 200
+    };
+
+    return {
+        result,
+    }
+}
+
 const Home = () => {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
+    const [question, sendQuestion] = useState(false);
+    const activeInput = useRef('');
 
     useEffect(() => {
         GetDataPage().catch(err => {
@@ -37,6 +54,7 @@ const Home = () => {
             }
         })
     }, []);
+
 
     if (error) {
         return <div>Ошибка: {error.message}</div>;
@@ -69,13 +87,20 @@ const Home = () => {
                        </div>
                        <div className="home__input-wrap">
                             <div className="input_wrapper">
-                                <input type="text" paleholder="Введите название:" />
-                                <span className="reset__input">Сбросить</span>
+                                <input type="text" name="quastion" paleholder="Введите название:" onChange={e => {
+                                    sendQuestion(true);
+                                    activeInput.current = e.target;
+                                    SendQuestion(e.target.value);
+                                }} />
+                                <button type="button" onClick={() => {
+                                    activeInput.current.value = '';
+                                    sendQuestion(false);
+                                }} className="reset__input">Сбросить</button>
                             </div>
                             <button className="input__btn">
                                 Отправить
                             </button>
-                            <button className="input__btn--one">
+                            <button className="input__btn--one" disabled={!question}>
                                 Дальше
                             </button>
                        </div>
